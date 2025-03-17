@@ -3,36 +3,67 @@
 import { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { ADD_TODO } from "@/lib/queries";
+import { ADD_TODO, PUBLISH_TODO } from "@/lib/queries";
 
 export default function AddTodo({ locale }) {
   const { data: session } = useSession();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [todo, setTodo] = useState({
+    title: "",
+    description: "",
+    dueDate: "",
+  });
   const [addTodo] = useMutation(ADD_TODO);
+  const [publishTodo] = useMutation(PUBLISH_TODO);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addTodo({
-      variables: { title, description, dueDate, userId: session?.userId, locale:locale },
+    let { data } = await addTodo({
+      variables: {
+        title: todo.title,
+        description: todo.description,
+        dueDate: new Date(todo.dueDate).toISOString(),
+        userId: session?.userId,
+        locale: locale,
+      },
     });
-    setTitle("");
-    setDescription("");
-    setDueDate("");
+    await publishTodo({
+      variables: { id: data.createTodo.id },
+    });
+  };
+
+  const setFormValues = (event) => {
+    console.log(event.target.value);
+    const value = event.target.value;
+    // event.target.type == "datetime-local" ? formatDate(event.target.value) : event.target.value;
+    setTodo((prev) => ({ ...prev, [event.target.name]: value }));
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" required />
       <input
         type="text"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        name="title"
+        value={todo.title}
+        onChange={(e) => setFormValues(e)}
+        placeholder="Title"
+        required
+      />
+      <input
+        type="text"
+        value={todo.description}
+        name="description"
+        onChange={(e) => setFormValues(e)}
         placeholder="Description"
         required
       />
-      <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} required />
+      <input
+        type="datetime-local"
+        name="dueDate"
+        // value={todo.dueDate.split("/").reverse().join("/")}
+        value={todo.dueDate}
+        onChange={(e) => setFormValues(e)}
+        required
+      />
       <button type="submit">Add Todo</button>
     </form>
   );

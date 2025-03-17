@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import TodoList from "@/components/TodoList";
+
 import AddTodo from "@/components/AddTodo";
 import CalendarView from "@/components/CalenderView";
 

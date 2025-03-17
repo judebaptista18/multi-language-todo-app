@@ -33,6 +33,15 @@ export const ADD_TODO = gql`
   }
 `;
 
+export const PUBLISH_TODO = gql`
+ mutation PublishTodo($id: ID!) {
+  publishTodo(where: { id: $id }) {
+    id
+  }
+}
+`;
+
+
 export const UPDATE_TODO = gql`
   mutation UpdateTodo(
     $id: ID!
