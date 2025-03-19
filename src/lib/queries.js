@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_TODOS = gql`
-  query GetTodos($userId: String!, $locale: String!) {
-    todos(where: { userId: $userId, localeType: $locale }) {
+  query GetTodos($userId: String!, $locale: Locale!) {
+    todos(where: { userId: $userId}, locales: [$locale]) {
       id
       title
       description
@@ -17,7 +17,6 @@ export const ADD_TODO = gql`
     $description: String!
     $dueDate: DateTime!
     $userId: String!
-    $locale: String!
   ) {
     createTodo(
       data: {
@@ -25,10 +24,9 @@ export const ADD_TODO = gql`
         description: $description
         dueDate: $dueDate
         userId: $userId
-        localeType: $locale
       }
     ) {
-      id
+        id,title,description,dueDate
     }
   }
 `;
@@ -36,7 +34,7 @@ export const ADD_TODO = gql`
 export const PUBLISH_TODO = gql`
  mutation PublishTodo($id: ID!) {
   publishTodo(where: { id: $id }) {
-    id
+     id,title,description,dueDate
   }
 }
 `;
@@ -53,7 +51,7 @@ export const UPDATE_TODO = gql`
       where: { id: $id }
       data: { title: $title, description: $description, dueDate: $dueDate }
     ) {
-      id
+      id,title,description,dueDate
     }
   }
 `;
@@ -61,7 +59,7 @@ export const UPDATE_TODO = gql`
 export const DELETE_TODO = gql`
   mutation DeleteTodo($id: ID!) {
     deleteTodo(where: { id: $id }) {
-      id
+      id,title,description,dueDate
     }
   }
 `;

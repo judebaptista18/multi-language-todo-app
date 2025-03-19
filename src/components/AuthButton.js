@@ -11,6 +11,7 @@ export default function AuthButtons() {
     return (
       <div className="header">
         <p>Welcome, {session.user.name}</p>
+        <h1>TODO APP</h1>
         <button onClick={() => signOut()}>Sign Out</button>
       </div>
     );
@@ -25,6 +26,7 @@ export default function AuthButtons() {
           <Image
             src={todoImage}
             alt="Todo Illustration"
+            priority={true}
           />
         </div>
         <div>
