@@ -1,0 +1,20 @@
+{
+  "HomePage": {
+    "addInstruction": "Cliquez sur le calendrier pour ajouter Todo",
+    "add": "Ajouter Todo",
+    "update": "Mettre à jour Todo",
+    "title": "Titre",
+    "description": "Description",
+    "view": "Voir Todo",
+    "delete": "Supprimer Todo",
+    "confirm": "Confirmer la suppression",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "AuthPage": {
+    "welcome": "Accueillir",
+    "signout": "Se déconnecter",
+    "signin": "Connectez-vous avec Google",
+    "signinInstruction": "Connectez-vous pour voir vos todos"
+  }
+}

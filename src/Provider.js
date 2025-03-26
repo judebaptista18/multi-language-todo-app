@@ -6,9 +6,7 @@ import client from "./lib/apollo-client";
 export default function Providers({ children }) {
   return (
     <SessionProvider>
-      <ApolloProvider client={client}>
-        {children}
-      </ApolloProvider>
+      <ApolloProvider client={client}>{children}</ApolloProvider>
     </SessionProvider>
   );
 }

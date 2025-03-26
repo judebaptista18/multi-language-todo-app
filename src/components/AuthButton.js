@@ -1,18 +1,19 @@
 "use client";
 
 import { signIn, signOut, useSession } from "next-auth/react";
+import {useTranslations} from 'next-intl';
 import Image from "next/image";
 import todoImage from "../../public/todo-illustartion.jpg";
 
 export default function AuthButtons() {
   const { data: session } = useSession();
-
+  const t = useTranslations('AuthPage');
   if (session) {
     return (
       <div className="header">
-        <p>Welcome, {session.user.name}</p>
+        <p>{t('welcome')}, {session.user.name}</p>
         <h1>TODO APP</h1>
-        <button onClick={() => signOut()}>Sign Out</button>
+        <button onClick={() => signOut()}>{t('signout')}</button>
       </div>
     );
   }
@@ -31,8 +32,8 @@ export default function AuthButtons() {
         </div>
         <div>
           {" "}
-          <h2>Sign in to view your todos</h2>
-          <button onClick={() => signIn("google")}>Sign In with Google</button>
+          <h2>{t('signinInstruction')}</h2>
+          <button onClick={() => signIn("google")}>{t('signin')}</button>
         </div>
       </div>
     </div>

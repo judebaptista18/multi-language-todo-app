@@ -2,30 +2,34 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { DELETE_TODO } from "@/lib/queries";
+import { useTranslations, useLocale } from "next-intl";
 
+import { DELETE_TODO } from "@/lib/queries";
 import AddTodo from "@/components/AddTodo";
 import CalendarView from "@/components/CalenderView";
 import Modal from "@/components/Modal";
-
-const MODAL_TITLES = {
-  ADD: "Add Todo",
-  UPDATE: "Update Todo",
-  VIEW: "View Todo",
-  DELETE: "Delete Todo",
-};
+import LocaleSwitchSelect from "@/components/LocaleSwitchSelect";
 
 export default function Home() {
+  const locale = useLocale();
+  const t = useTranslations("HomePage");
   const { data: session } = useSession();
-  const [locale, setLocale] = useState("en");
-  const [todo, setTodo] = useState();
+  const [todo, setTodo] = useState({});
   const [modalState, setModalState] = useState({ isOpen: false, type: null });
   const initialFormState = {
     id: "",
     title: "",
     description: "",
-    dueDate: ""
+    dueDate: "",
   };
+
+  const MODAL_TITLES = {
+    ADD: t("add"),
+    UPDATE: t("update"),
+    VIEW: t("view"),
+    DELETE: t("delete"),
+  };
+
   const [deleteTodo] = useMutation(DELETE_TODO, {
     update(cache, { data }) {
       if (!data?.deleteTodo) return;
@@ -53,10 +57,6 @@ export default function Home() {
   const closeModal = () => {
     setModalState({ isOpen: false, type: null });
     setTodo(initialFormState);
-  };
-
-  const handleLocaleChange = (e) => {
-    setLocale(e.target.value);
   };
 
   const handleAddEvent = (args) => {
@@ -101,13 +101,10 @@ export default function Home() {
     <>
       <div className="container-flex">
         <div className="left">
-          <p>Click on the calender to add todo.</p>
+          <p>{t("addInstruction")}</p>
         </div>
         <div className="right">
-          <select onChange={handleLocaleChange} value={locale}>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-          </select>
+          <LocaleSwitchSelect defaultValue={locale}/>
         </div>
       </div>
 
@@ -142,16 +139,16 @@ export default function Home() {
           onClose={closeModal}
           title={MODAL_TITLES.DELETE}
         >
-          <p>Confirm Delete?</p>
+          <p>{t("confirm")}</p>
           <div>
-            <button onClick={handleConfirmDelete}>Yes</button>
+            <button onClick={handleConfirmDelete}>{t("yes")}</button>
             <button
               onClick={() => {
                 closeModal;
                 setTodo(initialFormState);
               }}
             >
-              No
+              {t("no")}
             </button>
           </div>
         </Modal>

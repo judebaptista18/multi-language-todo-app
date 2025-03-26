@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useMutation } from "@apollo/client";
 import { useSession } from "next-auth/react";
-import { ADD_TODO, PUBLISH_TODO, GET_TODOS, UPDATE_TODO } from "@/lib/queries";
+import {useTranslations} from 'next-intl';
+import { ADD_TODO, PUBLISH_TODO, UPDATE_TODO } from "@/lib/queries";
 
 export default function AddTodo({
   isUpdate,
@@ -14,7 +15,7 @@ export default function AddTodo({
   initialFormState,
 }) {
   const { data: session } = useSession();
-
+  const t = useTranslations('HomePage');
   const [addTodo, { loading }] = useMutation(ADD_TODO, {
     update(cache, { data }) {
       if (!data?.createTodo) return;
@@ -92,11 +93,10 @@ export default function AddTodo({
     [setTodo]
   );
 
-  console.log("data", todo);
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title">{t("title")}</label>
         <input
           id="title"
           type="text"
@@ -108,7 +108,7 @@ export default function AddTodo({
           disabled={displayMode}
         />
 
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description">{t("description")}</label>
         <textarea
           id="description"
           name="description"
@@ -130,7 +130,7 @@ export default function AddTodo({
         />
         {!displayMode && (
           <button type="submit" disabled={loading}>
-            {isUpdate ? "Update Todo" : "Add Todo"}
+            {isUpdate ? t("update") : t("add")}
           </button>
         )}
       </form>
